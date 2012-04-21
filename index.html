@@ -43,19 +43,37 @@
         .message {
             font-style: italic;
         }
+        .systemmessage {
+            font-style: italic;
+            color: #777;
+        }
     </style>
     <script type='text/javascript' src='http://code.jquery.com/jquery-1.7.2.min.js'></script>
 </head>
 <body>
     <div id='out'></div>
     <div id='in' contenteditable="true"></div>
+    <div id='curnode' class='hidden'></div>
 </body>
 <script type='text/javascript'>
     var path = window.location.protocol + '//' + window.location.host + window.location.pathname.slice(0, window.location.pathname.lastIndexOf('/'));
     var settings = {};
 
     settings.world = 'world1';
+    settings.basepath = path+'/'+settings.world;
+    settings.facing = 'n';
     settings.curnode = {};
+
+    var diraliases = {
+        'n':'north',
+        'e':'east',
+        's':'south',
+        'w':'west',
+        'opn':'south',
+        'ope':'west',
+        'ops':'north',
+        'opw':'east',
+    };
 
 
     function parseSettings(selector) {
@@ -77,23 +95,38 @@
         return settings;
     }
 
-    function setNode(nodedata) {
-        // add node to out area, and make it the current node
-        $('#out .curnode').removeClass('curnode');
-        $('#out').append(nodedata);
-        $('#out .node:last').addClass('curnode');
+    function setCurNode(nodedata) {
+        $('#curnode').html(nodedata);
+        settings.curnode = parseSettings('#curnode');
 
-        // parse settings
-        settings.curnode = parseSettings('.curnode');
+        var movetoFacing = $('#curnode .look .' + diraliases[settings.facing]).html();
+        var movetoFrom = $('#curnode .from .' + diraliases['op'+settings.facing]).html();
 
-        // show the node and scroll to the bottom of the out area
-        $('#out .curnode').show();
-        $('#out').animate({scrollTop:$('#out').prop('scrollHeight')});
+        addText(movetoFrom);
+        addText(movetoFacing);
     }
 
 
     function addMessage(msg) {
+        if(msg==''){return;}
         $('#out').append("<div class='message'>"+msg+"</div>");
+        $('#out').animate({scrollTop:$('#out').prop('scrollHeight')});
+    }
+    function addText(txt) {
+        if(txt==''){return;}
+        $('#out').append("<div class='text'>"+txt+"</div>");
+        $('#out').animate({scrollTop:$('#out').prop('scrollHeight')});
+    }
+    function addSystemMessage(msg) {
+        if(msg==''){return;}
+        $('#out').append("<div class='systemmessage'>"+msg+"</div>");
+        $('#out').animate({scrollTop:$('#out').prop('scrollHeight')});
+    }
+
+    function help() {
+        $.get(path+'/help.html',function(data){
+            addSystemMessage(data);
+        })
     }
 
     function move(direction) {
@@ -107,24 +140,87 @@
             }
         }
         if(!canmove) {
-            addMessage('Unfortunately, you are unable move in that direction');
+            var msg = $('#curnode .movefailed .' + diraliases[direction]).html();
+            if(msg == '') {
+                addMessage('Unfortunately, you are unable move in that direction');
+            }
+            else {
+                addMessage(msg);
+            }
             return;
         }
 
-        addMessage('You moved!');
+        var moveto = $('#curnode .move .' + diraliases[direction]).html();
+        settings.facing = direction;
+        $.get(settings.basepath+moveto, setCurNode);
+    }
+
+    function look(direction) {
+        var msg = $('#curnode .look .' + diraliases[direction]).html();
+        addText(msg);
+    }
+
+    function talk(person) {
+
     }
 
     function dispatchCommand() {
-        var command = $('#in').html();
+        var command = $('#in').html().toLowerCase().split(' ');
         $('#in').html('');
 
-        switch(command) {
-            case 'n':
-            case 'e':
-            case 's':
-            case 'w':
-                move(command);
+        if(command.length < 1) { return; }
+
+        switch(command[0]) {
+            // --- help ----------
+            case '?':
+            case 'h':
+            case 'help':
+                help();
                 break;
+
+            // --- move ----------
+            case 'n':
+            case 'north':
+            case 'e':
+            case 'east':
+            case 's':
+            case 'south':
+            case 'w':
+            case 'west':
+                move(command[0].substr(0,1));
+                break;
+
+            // --- look ----------
+            case 'ln':
+            case 'le':
+            case 'ls':
+            case 'lw':
+                look(command[0].substr(1,1));
+                break;
+            case 'look':
+                switch(command[1]){
+                    case 'n':
+                    case 'north':
+                    case 'e':
+                    case 'east':
+                    case 's':
+                    case 'south':
+                    case 'w':
+                    case 'west':
+                        look(command[1].substr(0,1));
+                        break;
+                    default:
+                        addSystemMessage("the look command should be followed by 'n', 'e', 's', or 'w'");
+                }
+
+            // --- talk ----------
+            case 't':
+            case 'talk':
+                break;
+
+            // --- error ----------
+            default:
+                addSystemMessage('command not understood');
         }
     }
 
@@ -139,9 +235,7 @@
         $('#in').keydown(handleKeyboard);
 
         // get start node for the world
-        var startnode = path+'/'+settings.world+'/start/start.html';
-        $.get(startnode, setNode);
-
+        $.get(settings.basepath+'/start/start.html', setCurNode);
 
         $('#in').focus();
     });
