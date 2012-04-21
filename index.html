@@ -64,6 +64,7 @@
     settings.facing = 'n';
     settings.curnode = {};
     settings.conversations = {};
+    settings.lastconversationid = -1;
     settings.commandhistory = [];
     settings.commandhistorypos = -1;
 
@@ -165,7 +166,9 @@
         addText(msg);
     }
 
-    function conversation(id) {
+    function conversation(id, answered) {
+        answered = typeof answered !== 'undefined' ? answered : false;
+
         // grab conversation
         var conversation = $('#curnode .conversations ol[conversationid*="'+id+'"]')[0];
 
@@ -199,6 +202,7 @@
         // print out conversation elements until there's a required answer element found
         // starting at the current element
         var speech;
+        if(answered) {pos += 1;}
         for(var i = pos; i < convEls.length; i++) {
             speech = $(convEls[i]).find('.speech');
             addText($(speech).html());
@@ -208,6 +212,7 @@
             pos += 1;
         }
         settings.conversations[settings.curnodelocation][id] = pos;
+        settings.lastconversationid = id;
     }
     function talk(person) {
         var person = $("#curnode .look .talk:contains('"+person+"')");
@@ -225,6 +230,23 @@
 
         var conversationID = $(person[0]).attr('conversationid');
         conversation(conversationID);
+    }
+
+    function answer(option) {
+        if(settings.lastconversationid < 0) {
+            addMessage("You answer a question that is not currently being asked.");
+            return;
+        }
+
+        var selector = '#curnode .conversations ol[conversationid*="'+settings.lastconversationid+'"]';
+        var answers = $(selector + ' .speech .answer:contains("'+option+'")');
+        if(answers.length <= 0) {
+            var incorrectanswer = $(selector + ' .incorrectanswer').html();
+            addText(incorrectanswer);
+            return;
+        }
+
+        conversation(settings.lastconversationid, true);
     }
 
     function dispatchCommand() {
@@ -284,8 +306,8 @@
                 talk(command.slice(1).join(' '));
                 break;
 
-            case 'a':
-            case 'answer':
+            case 'say':
+                answer(command.slice(1).join(' '));
                 break;
 
             // --- error ----------
