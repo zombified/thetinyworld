@@ -2,8 +2,148 @@
 <html>
 <head>
     <title>The Tiny World</title>
+    <style type='text/css'>
+        html,body {margin:0;padding:0;height:100%;}
+        #out {
+            position: fixed;
+            top: 0px;
+            bottom: 30px;
+            left: 0px;
+            width: 100%;
+            overflow: auto;
+            padding: 4px;
+        }
+        #in {
+            height: 30px;
+            line-height: 30px;
+            padding:0 4px;
+            position: fixed;
+            bottom: 0px;
+            left: 0px;
+            width: 100%;
+
+            background-color: #aaa;
+            font-weight: bold;
+            font-family: Helvetica, Arial, Sans-Serif;
+            font-style: italic;
+        }
+
+        .hidden { display: none; }
+
+        .command {
+            font-weight: bold;
+            color: blue;
+        }
+        .commandinactive {
+            font-style: italic;
+        }
+
+        .node { display:none; }
+
+        .message {
+            font-style: italic;
+        }
+    </style>
+    <script type='text/javascript' src='http://code.jquery.com/jquery-1.7.2.min.js'></script>
 </head>
 <body>
-
+    <div id='out'></div>
+    <div id='in' contenteditable="true"></div>
 </body>
+<script type='text/javascript'>
+    var path = window.location.protocol + '//' + window.location.host + window.location.pathname.slice(0, window.location.pathname.lastIndexOf('/'));
+    var settings = {};
+
+    settings.world = 'world1';
+    settings.curnode = {};
+
+
+    function parseSettings(selector) {
+        var terms = $(selector).find('dl.settings dt');
+        var values = $(selector).find('dl.settings dd');
+        var settings = {};
+        var key, val;
+        for(var i = 0; i < terms.length; i++){
+            key = $(terms[i]).html();
+            val = $(values[i]).html();
+            if(key in settings) {
+                settings[key].push(val);
+            }
+            else {
+                settings[key] = [val];
+            }
+        }
+
+        return settings;
+    }
+
+    function setNode(nodedata) {
+        // add node to out area, and make it the current node
+        $('#out .curnode').removeClass('curnode');
+        $('#out').append(nodedata);
+        $('#out .node:last').addClass('curnode');
+
+        // parse settings
+        settings.curnode = parseSettings('.curnode');
+
+        // show the node and scroll to the bottom of the out area
+        $('#out .curnode').show();
+        $('#out').animate({scrollTop:$('#out').prop('scrollHeight')});
+    }
+
+
+    function addMessage(msg) {
+        $('#out').append("<div class='message'>"+msg+"</div>");
+    }
+
+    function move(direction) {
+        var canmove = true;
+        if('disableddirection' in settings.curnode) {
+            for(var i = 0; i < settings.curnode.disableddirection.length; i++) {
+                if(settings.curnode.disableddirection[i] == direction) {
+                    canmove = false;
+                    break;
+                }
+            }
+        }
+        if(!canmove) {
+            addMessage('Unfortunately, you are unable move in that direction');
+            return;
+        }
+
+        addMessage('You moved!');
+    }
+
+    function dispatchCommand() {
+        var command = $('#in').html();
+        $('#in').html('');
+
+        switch(command) {
+            case 'n':
+            case 'e':
+            case 's':
+            case 'w':
+                move(command);
+                break;
+        }
+    }
+
+    function handleKeyboard(e) {
+        if(e.which == 13) {
+            dispatchCommand();
+        }
+    }
+
+    $(document).ready(function(){
+        // initialize command input
+        $('#in').keydown(handleKeyboard);
+
+        // get start node for the world
+        var startnode = path+'/'+settings.world+'/start/start.html';
+        $.get(startnode, setNode);
+
+
+        $('#in').focus();
+    });
+</script>
 </html>
