@@ -63,6 +63,9 @@
     settings.basepath = path+'/'+settings.world;
     settings.facing = 'n';
     settings.curnode = {};
+    settings.conversations = {};
+    settings.commandhistory = [];
+    settings.commandhistorypos = -1;
 
     var diraliases = {
         'n':'north',
@@ -109,7 +112,7 @@
 
     function addMessage(msg) {
         if(msg==''){return;}
-        $('#out').append("<div class='message'>"+msg+"</div>");
+        $('#out').append("<div class='message'><p>"+msg+"<p></div>");
         $('#out').animate({scrollTop:$('#out').prop('scrollHeight')});
     }
     function addText(txt) {
@@ -119,9 +122,10 @@
     }
     function addSystemMessage(msg) {
         if(msg==''){return;}
-        $('#out').append("<div class='systemmessage'>"+msg+"</div>");
+        $('#out').append("<div class='systemmessage'><p>"+msg+"<p></div>");
         $('#out').animate({scrollTop:$('#out').prop('scrollHeight')});
     }
+
 
     function help() {
         $.get(path+'/help.html',function(data){
@@ -152,6 +156,7 @@
 
         var moveto = $('#curnode .move .' + diraliases[direction]).html();
         settings.facing = direction;
+        settings.curnodelocation = moveto;
         $.get(settings.basepath+moveto, setCurNode);
     }
 
@@ -160,12 +165,72 @@
         addText(msg);
     }
 
-    function talk(person) {
+    function conversation(id) {
+        // grab conversation
+        var conversation = $('#curnode .conversations ol[conversationid*="'+id+'"]')[0];
 
+        // check to make sure this conversation has a position stored for it
+        if(!(settings.curnodelocation in settings.conversations)) {
+            settings.conversations[settings.curnodelocation] = {};
+        }
+        var pos;
+        if(!(id in settings.conversations[settings.curnodelocation])) {
+            pos = settings.conversations[settings.curnodelocation][id] = 0;
+        }
+        else {
+            pos = settings.conversations[settings.curnodelocation][id];
+        }
+
+        // check to see if the conversation needs to be repeated, or if it needs to go
+        // to a new conversation
+        var convEls = $(conversation).children();
+        if(pos >= convEls.length-1) { // needs to repeat or go to another conversation
+            var canrepeat = $(conversation).attr('canrepeat');
+            if(canrepeat == 'true') {
+                pos = settings.conversations[settings.curnodelocation][id] = 0;
+            }
+            else {
+                var gotoifrepeated = $(conversation).attr('gotoifrepeated');
+                setTimeout("conversation("+gotoifrepeated+")",1);
+                return;
+            }
+        }
+
+        // print out conversation elements until there's a required answer element found
+        // starting at the current element
+        var speech;
+        for(var i = pos; i < convEls.length; i++) {
+            speech = $(convEls[i]).find('.speech');
+            addText($(speech).html());
+            if($(speech).find('.answer').length > 0) {
+                break;
+            }
+            pos += 1;
+        }
+        settings.conversations[settings.curnodelocation][id] = pos;
+    }
+    function talk(person) {
+        var person = $("#curnode .look .talk:contains('"+person+"')");
+        if(person.length < 1) {
+            addMessage("No one seems to be responding.");
+            return;
+        }
+
+        // the name provided might not be specific enough to narrow
+        // down to a single conversation
+        if(person.length > 1) {
+            addMessage("A few people seem to look at you as if you are addressing them, but none of them speak to you.");
+            return;
+        }
+
+        var conversationID = $(person[0]).attr('conversationid');
+        conversation(conversationID);
     }
 
     function dispatchCommand() {
-        var command = $('#in').html().toLowerCase().split(' ');
+        var rawcommand = $('#in').html();
+        settings.commandhistory.push(rawcommand);
+        var command = rawcommand.toLowerCase().split(' ');
         $('#in').html('');
 
         if(command.length < 1) { return; }
@@ -213,9 +278,14 @@
                         addSystemMessage("the look command should be followed by 'n', 'e', 's', or 'w'");
                 }
 
-            // --- talk ----------
+            // --- talk/answer ----------
             case 't':
             case 'talk':
+                talk(command.slice(1).join(' '));
+                break;
+
+            case 'a':
+            case 'answer':
                 break;
 
             // --- error ----------
@@ -225,8 +295,29 @@
     }
 
     function handleKeyboard(e) {
-        if(e.which == 13) {
+        if(e.which == 13) { // enter key
             dispatchCommand();
+        }
+        else if(e.which == 38) { // up arrow
+            // set the pos in the command history to the end of the list
+            if(settings.commandhistorypos < 0) {
+                settings.commandhistorypos = settings.commandhistory.length;
+            }
+            // if the pos is now a valid pos in the list, then set the input field
+            if(settings.commandhistorypos > 0) {
+                settings.commandhistorypos -= 1;
+                $('#in').html(settings.commandhistory[settings.commandhistorypos]);
+            }
+        }
+        else if(e.which == 40) { // down arrow
+            if(settings.commandhistorypos >= 0 && settings.commandhistorypos < settings.commandhistory.length-1) {
+                settings.commandhistorypos += 1;
+                $('#in').html(settings.commandhistory[settings.commandhistorypos]);
+            }
+        }
+
+        if(e.which != 38 && e.which != 40) {
+            settings.commandhistorypos = -1; // reset position if any key but up/down has been clicked
         }
     }
 
