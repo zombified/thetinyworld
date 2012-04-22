@@ -30,9 +30,11 @@
         <p>
             A gentle looking <span class='talk' conversationid='1'>old man</span> 
             dressed in a plain brown robe stands slightly hunched
-            over a plain wooden podium with a quill in one hand, while the other holds down
-            a page in a fairly thick book.
+            over a plain wooden podium. In his left hand he holds a quill, and with his
+            right hand he holds down a page in a very large leather bound book. <span class='itemdesc'>An extra <span class='item' itemid='nd1-ink'>bottle of ink</span> sits on the edge of the podium.</span>
         </p>
+        <p class='itemdesc'>There is a <span class='item' conversationid='2' itemid='nd1-quill'>quill pen</span> on the ground, presumably the old man has dropped it.</p>
+        <p class='itemdesc'>There is a <span class='item' itemid='nd1-paper'>blank piece of paper</span> sitting on a stack of books.</p>
     </div>
     <div class='east'>There are tall deciduous trees to the east.</div>
     <div class='south'>There are tall deciduous trees to the south.</div>
@@ -51,15 +53,15 @@
     <div class='west'>You feel like you are not able to leave the small meadow you find yourself in.</div>
 </div>
 <div class='conversations'>
-    <ol conversationid='1' canrepeat='false' gotoifrepeated='2'>
+    <ol conversationid='1' canrepeat='false' gotoifrepeated='-1'>
         <li>
             <div class='speech'>
-                <p>"Hello, hello -- you'll forgive an old man won't you? I need to ask you a question or two that may seem perfectly obvious to you, but I must ask them just the same.</p>
+                <p>"Hello, hello -- you'll forgive an old man won't you? I need to ask you a question or two that may seem perfectly obvious to you, but I must ask them just the same."</p>
             </div>
         </li>
         <li>
             <div class='speech'>
-                What gender do identify yourself as <span class='answer' field='gender'>male</span>, <span class='answer' field='gender'>female</span>, or, perhaps, <span class='answer' field='gender'>androgynous</span>?"</p>
+                He readies his pen to write something, and asks "Do you identify yourself as <span class='answer' field='gender'>male</span>, <span class='answer' field='gender'>female</span>, or, perhaps, <span class='answer' field='gender'>androgynous</span>?"</p>
             </div>
             <div class='incorrectanswer'>
                 <p>"Please, just answer the question. We can get you moving much quicker this way! What gender do you identify yourself as, <span class='answer' field='gender'>male</span>, <span class='answer' field='gender'>female</span>, or, perhaps, <span class='answer' field='gender'>androgynous</span>?"</p>
@@ -78,14 +80,17 @@
                 <p>
                     The man sets down his quill, and picks up a round shiny object. "Now, <span replace='gender/tgenderChild' />, I'm sure you have a lot of questions. Usually we get to introductions after I ask your name, but there's no time for that now." You hear him mutter something under his breath, and see him wave his right hand over the object in his left hand.
                 </p>
+                <p>
+                    As you are about to ask him what is going on, you feel like you're being compressed and stuffed in side a box -- you're vision becomes all stretched and skewed, and when the pain becomes unbearable, you pass out.
+                </p>
             </div>
         </li>
         <li actioncmd='n/acommand'></li>
     </ol>
-    <ol conversationid='2' canrepeat='true'>
+    <ol conversationid='2' catrepeat='false' gotoifrepeat='-1'>
         <li>
             <div class='speech'>
-                <p>"Oh dear me, you're still here! Well, get on with you -- through the gate now!"</p>
+                The old man notices you pick up the quill-pen and says "Make sure you put that to good use now, the quill, after all, is mightier than the sword!"
             </div>
         </li>
     </ol>

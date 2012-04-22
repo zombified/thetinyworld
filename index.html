@@ -13,6 +13,7 @@
             overflow: auto;
             padding: 4px;
         }
+        #out div { margin-right:10px; }
         #in {
             height: 30px;
             line-height: 30px;
@@ -74,6 +75,8 @@
     settings.commandhistory = [];
     settings.commandhistorypos = -1;
     settings.answers = {};
+    settings.inventory = {};
+    settings.grabbeditems = {};
 
     var diraliases = {
         'n':'north',
@@ -109,6 +112,15 @@
     function setCurNode(nodedata) {
         $('#curnode').html(nodedata);
         replaceAnswers();
+
+        // hide items that have already been grabbed
+        var items = $('#curnode .look .item');
+        for(var i = 0; i < items.length; i++) {
+            if($(items[i]).attr('itemid') in settings.grabbeditems){
+                $(items[i]).parents('.itemdesc:first').hide();
+            }
+        }
+
         settings.curnode = parseSettings('#curnode');
 
         var movetoFacing = $('#curnode .look .' + diraliases[settings.facing]).html();
@@ -220,13 +232,14 @@
         // check to see if the conversation needs to be repeated, or if it needs to go
         // to a new conversation
         var convEls = $(conversation).children();
-        if(pos >= convEls.length-1) { // needs to repeat or go to another conversation
+        if(pos > convEls.length-1) { // needs to repeat or go to another conversation
             var canrepeat = $(conversation).attr('canrepeat');
             if(canrepeat == 'true') {
                 pos = settings.conversations[settings.curnodelocation][id] = 0;
             }
             else {
                 var gotoifrepeated = $(conversation).attr('gotoifrepeated');
+                if(gotoifrepeated == '-1') { return; }
                 setTimeout("conversation("+gotoifrepeated+")",1);
                 return;
             }
@@ -305,6 +318,50 @@
         conversation(settings.lastconversationid, true);
     }
 
+    function grab(item) {
+        var matchingitems = $('#curnode .look .item:contains("'+item+'")');
+
+        if(matchingitems.length <= 0) {
+            addMessage("That doesn't appear to be something you can grab...");
+            return;
+        }
+
+        if(matchingitems.length > 1) {
+            addMessage("That choice of item seems a bit ambiguous.");
+            return;
+        }
+
+        var itemid = $(matchingitems[0]).attr('itemid');
+        var conversationid = $(matchingitems[0]).attr('conversationid');
+        var parentdesc = $(matchingitems[0]).parents('.itemdesc:first').hide();
+
+        settings.grabbeditems[itemid] = true;
+        settings.inventory[itemid] = $(matchingitems[0]).html();
+
+        addMessage("You've picked up the " + settings.inventory[itemid]);
+
+        if(typeof conversationid !== 'undefined' && conversationid !== false) {
+            conversation(conversationid);
+        }
+    }
+
+    function inventory() {
+        var keys = [];
+        for(var key in settings.inventory){keys.push(key);}
+
+        if(keys.length <= 0) {
+            addMessage('You have no items in your inventory');
+            return;
+        }
+
+        var itemslist = [];
+        for(var key in settings.inventory) {
+            itemslist.push(settings.inventory[key]);
+        }
+
+        addMessage("You have the following items: " + itemslist.join(', '));
+    }
+
     function dispatchCommand(rawcommand, force) {
         rawcommand = rawcommand || $('#in').html();
         force = typeof force !== 'undefined' ? force : false;
@@ -366,6 +423,22 @@
 
             case 'say':
                 answer(command.slice(1).join(' '));
+                break;
+
+            // --- grab/inv/combine ----------
+            case 'g':
+            case 'grab':
+                grab(command.slice(1).join(' '));
+                break;
+
+            case 'i':
+            case 'inv':
+            case 'inventory':
+                inventory();
+                break;
+
+            case 'c':
+            case 'combine':
                 break;
 
             // --- error ----------
