@@ -1,32 +1,69 @@
 <div class='node'>
 <dl class='settings'>
+    <dt>disabledirection</dt><dd>s</dd>
+    <dt>disabledirection</dt><dd>e</dd>
 </dl>
 <div class='from'>
     <div class='north'></div>
     <div class='east'></div>
     <div class='south'>
-        <p>Here you are! At a new location!</p>
+        <p>
+            A familiar feeling of your senses slowly creeping back wakes your mind, and you stand up. <span class='message'>Hopefully</span>, you think, <span class='message'>in the future you'll be able to do that without the pain or ending up on your back.</span>
+        </p>
+        <p>
+            You appear to be on a large stone dias, surrounded by a forest on 2 sides, a large chasm in front of you, and a cliff to your left. Two paths lead from the dias, one heading west and following a narrow line between the chasm and the cliff. The second path goes north, but follows the east side of the chasm. The path going to the north also looks like it winds it's way next to a river stemming from the woods directly to your east.
+        </p>
     </div>
     <div class='west'></div>
 </div>
 <div class='look'>
-    <div class='north'></div>
-    <div class='east'></div>
-    <div class='south'></div>
-    <div class='west'></div>
+    <div class='north'>
+        <p>
+            The chasm is a large hole in the earth. You see a <span class='talk' conversationid='1'>sign</span> and a <span class='talk' conversationid='2'>path</span> heading in a northerly direction.
+        </p>
+    </div>
+    <div class='east'>
+        <p>
+            A thick mass of deciduous trees spreads out to the east. They have a look similar to those you saw at the edge of the meadow with the old man.
+        </p>
+    </div>
+    <div class='south'>
+        <p>
+            A thick mass of deciduous trees spreads out to the south. They have a look similar to those you saw at the edge of the meadow with the old man.
+        </p>
+    </div>
+    <div class='west'>
+        <p>
+            To the west there is a great cliff. At first glance the world appears to end at it's edge, but then you realize you must be on a very tall mountain. There is a path from the dias that follows very closely to the edge of this great cliff, and up the path a ways you can see there is very little space between the cliff edge on one side, and the chasm on the other. Eventually the path seems to lead to a magus tower in the distance.
+        </p>
+    </div>
 </div>
 <div class='move'>
-    <div class='north'></div>
+    <div class='north'>/node3.html</div>
     <div class='east'></div>
     <div class='south'></div>
-    <div class='west'></div>
+    <div class='west'>/node4.html</div>
 </div>
 <div class='movefailed'>
     <div class='north'></div>
-    <div class='east'></div>
-    <div class='south'></div>
+    <div class='east'>There is no path to the east, and you should probably be getting to the master magus anyway.</div>
+    <div class='south'>There is no path to the south, and you should probably be getting to the master magus anyway.</div>
     <div class='west'></div>
 </div>
 <div class='conversations'>
+    <ol conversationid='1' canrepeat='true'>
+        <li>
+            <div class='speech'>
+                The sign reads "This here be called 'The Rat Chasm'. It's deep, and full of rats. Watch your step."
+            </div>
+        </li>
+    </ol>
+    <ol conversationid='2' canrepeat='true'>
+        <li>
+            <div class='speech'>
+                The path is a narrow dirt and gravel path. It heads north, following the chasm for a while before meeting with a river stemming from the forest to the east. When it reaches the river, you can see it winds it's way to a magus tower.
+            </div>
+        </li>
+    </ol>
 </div>
 </div>

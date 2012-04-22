@@ -29,6 +29,11 @@
             font-style: italic;
         }
 
+        .oldoutput {
+            background-color: #eee;
+            color: #999;
+        }
+
         .hidden { display: none; }
 
         .command {
@@ -47,6 +52,11 @@
         .systemmessage {
             font-style: italic;
             color: #777;
+        }
+
+        .text, .message, .systemmessage {
+            margin:0;
+            padding:2px 4px;
         }
     </style>
     <script type='text/javascript' src='http://code.jquery.com/jquery-1.7.2.min.js'></script>
@@ -158,6 +168,9 @@
         }
     }
 
+    function markOldMessages() {
+        $('#out div').addClass('oldoutput');
+    }
     function addMessage(msg) {
         if(msg==''){return;}
         $('#out').append("<div class='message'><p>"+msg+"<p></div>");
@@ -249,18 +262,36 @@
             }
         }
 
+        settings.lastconversationid = id;
+
         // print out conversation elements until there's a required answer element found
         // starting at the current element
         var speech;
-        var actioncmd;
+        var actioncmd, stopconv;
+        var actioncmdFieldVal, stopcmdFieldVal;
+        var cmd, funcs, stopexec;
         if(answered) {pos += 1;}
         for(var i = pos; i < convEls.length; i++) {
+            stopconv = $(convEls[i]).attr('stopconv');
+            if(typeof stopconv !== 'undefined' && stopconv !== false) {
+                stopcmdFieldVal = stopconv.split('/');
+                cmd = stopcmdFieldVal[0];
+                funcs = stopcmdFieldVal.splice(1);
+                stopexec = false;
+                if(funcs.length >= 0) {
+                    for(var j = 0; j < funcs.length; j++) {
+                        if(!window[funcs[j]](cmd)) { stopexec = true; }
+                    }
+                }
+                if(stopexec) { return; }
+            }
+
             actioncmd = $(convEls[i]).attr('actioncmd');
             if(typeof actioncmd !== 'undefined' && actioncmd !== false) {
-                var actioncmdFieldVal = actioncmd.split('/');
-                var cmd = actioncmdFieldVal[0];
-                var funcs = actioncmdFieldVal.splice(1);
-                var stopexec = false;
+                actioncmdFieldVal = actioncmd.split('/');
+                cmd = actioncmdFieldVal[0];
+                funcs = actioncmdFieldVal.splice(1);
+                stopexec = false;
                 if(funcs.length >= 0) {
                     for(var j = 0; j < funcs.length; j++) {
                         if(window[funcs[j]](cmd)) { stopexec = true; }
@@ -274,10 +305,8 @@
                 break;
             }
             pos += 1;
+            settings.conversations[settings.curnodelocation][id] = pos;
         }
-
-        settings.conversations[settings.curnodelocation][id] = pos;
-        settings.lastconversationid = id;
     }
     function talk(person) {
         var person = $("#curnode .look .talk:contains('"+person+"')");
@@ -418,6 +447,10 @@
         addMessage("Those items don't look like they go together...");
     }
 
+    function gotonode(node) {
+        $.get(settings.basepath+node, setCurNode);
+    }
+
     function dispatchCommand(rawcommand, force) {
         rawcommand = rawcommand || $('#in').html();
         force = typeof force !== 'undefined' ? force : false;
@@ -427,6 +460,8 @@
         $('#in').html('');
 
         if(command.length < 1) { return; }
+
+        markOldMessages();
 
         switch(command[0]) {
             // --- help ----------
@@ -468,7 +503,9 @@
                         look(command[1].substr(0,1));
                         break;
                     default:
-                        addSystemMessage("the look command should be followed by 'n', 'e', 's', or 'w'");
+                        // looking at some sort of object, so it should
+                        // be examined, which is like talking to it
+                        talk(command.slice(1).join(' '));
                 }
 
             // --- talk/answer ----------
@@ -496,6 +533,14 @@
             case 'c':
             case 'combine':
                 combine(command.slice(1).join(' ').split(','))
+                break;
+
+            // --- goto ----------
+            // this is a debug command and should be disabled for normal play.
+            // if you're looking for a quick way to beat the game, you've missed
+            // the point, but can certainly enable this.
+            case 'goto':
+                gotonode(command.slice(1).join(' '));
                 break;
 
             // --- error ----------
@@ -579,6 +624,16 @@
     }
 
     function acommand(value) { dispatchCommand(value, true); return true; }
+
+    function playerHas(item) {
+        if(item in settings.inventory) {
+            addMessage(settings.inventory[item] + " was used, and removed from your inventory");
+            delete settings.inventory[item];
+            return true;
+        }
+
+        return false;
+    }
 
 
     $(document).ready(function(){
