@@ -77,6 +77,10 @@
     settings.answers = {};
     settings.inventory = {};
     settings.grabbeditems = {};
+    settings.recipes = {
+        'ink-quill-pen':{'name':'ink dipped quill pen', ingredients:['nd1-quill','nd1-ink']},
+        'drawing':{'name':'drawing', ingredients:['ink-quill-pen','nd1-paper']},
+    };
 
     var diraliases = {
         'n':'north',
@@ -321,6 +325,12 @@
     function grab(item) {
         var matchingitems = $('#curnode .look .item:contains("'+item+'")');
 
+        for(var i = matchingitems.length-1; i >= 0; i--) {
+            if($(matchingitems[i]).parents('.itemdesc:first').hasClass('hidden')) {
+                matchingitems.splice(i,1);
+            }
+        }
+
         if(matchingitems.length <= 0) {
             addMessage("That doesn't appear to be something you can grab...");
             return;
@@ -333,7 +343,7 @@
 
         var itemid = $(matchingitems[0]).attr('itemid');
         var conversationid = $(matchingitems[0]).attr('conversationid');
-        var parentdesc = $(matchingitems[0]).parents('.itemdesc:first').hide();
+        var parentdesc = $(matchingitems[0]).parents('.itemdesc:first').addClass('hidden');
 
         settings.grabbeditems[itemid] = true;
         settings.inventory[itemid] = $(matchingitems[0]).html();
@@ -360,6 +370,52 @@
         }
 
         addMessage("You have the following items: " + itemslist.join(', '));
+    }
+
+    function combine(objects) {
+        if(objects.length != 2) {
+            addSystemMessage('You need to specify 2 objects to combine');
+            return;
+        }
+
+        // make sure objects are in inventory
+        var foundfirst = false;
+        var foundsecond = false;
+        var firstname, secondname;
+        for(var o in settings.inventory) {
+            if(settings.inventory[o] == $.trim(objects[0])) {
+                foundfirst = true;
+                firstname = o;
+            }
+            else if(settings.inventory[o] == $.trim(objects[1])) {
+                foundsecond = true;
+                secondname = o;
+            }
+
+            if(foundfirst && foundsecond) { break; }
+        }
+        if(!foundfirst || !foundsecond) {
+            addMessage("You don't have both of those items!");
+            return;
+        }
+
+        // search for objects in recipes
+        var ingone, ingtwo;
+        for(var recipe in settings.recipes) {
+            ingone = settings.recipes[recipe].ingredients[0];
+            ingtwo = settings.recipes[recipe].ingredients[1];
+
+            if((ingone == firstname && ingtwo == secondname)
+                    || (ingone == secondname && ingtwo == firstname)) {
+                delete settings.inventory[ingone];
+                delete settings.inventory[ingtwo];
+                settings.inventory[recipe] = settings.recipes[recipe].name;
+                addMessage(settings.inventory[recipe] + " was added to your inventory, and the other items removed");
+                return;
+            }
+        }
+
+        addMessage("Those items don't look like they go together...");
     }
 
     function dispatchCommand(rawcommand, force) {
@@ -439,6 +495,7 @@
 
             case 'c':
             case 'combine':
+                combine(command.slice(1).join(' ').split(','))
                 break;
 
             // --- error ----------
