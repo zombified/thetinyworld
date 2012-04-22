@@ -1,0 +1,57 @@
+<!-- this is an example node, with all possible options visible at least once (though, maybe not in a logical manner) //-->
+<div class='node'>
+<dl class='settings'>
+    <dt>disableddirection</dt><dd>e</dd>
+    <dt>disableddirection</dt><dd>w</dd>
+</dl>
+<div class='from'>
+    <div class='north'></div>
+    <div class='east'></div>
+    <div class='south'>
+        <p></p>
+    </div>
+    <div class='west'></div>
+</div>
+<div class='look'>
+    <div class='north'>
+        <p>
+            <span class='talk' conversationid='1'></span>
+        </p>
+        <p class='itemdesc'><span class='item' conversationid='2' itemid='nd1-quill'></span></p>
+    </div>
+    <div class='east'></div>
+    <div class='south'></div>
+    <div class='west'></div>
+</div>
+<div class='move'>
+    <div class='north'></div>
+    <div class='east'></div>
+    <div class='south'></div>
+    <div class='west'></div>
+</div>
+<div class='movefailed'>
+    <div class='north'></div>
+    <div class='east'></div>
+    <div class='south'></div>
+    <div class='west'></div>
+</div>
+<div class='conversations'>
+    <ol conversationid='1' canrepeat='false' gotoifrepeated='2'>
+        <li actioncmd='n/acommand' stopconv='drawing/playerHas'>
+            <div class='speech'>
+                <p><span class='answer' field='gender'>male</span><span replace='gender/tupper/tgenderSub' /></p>
+            </div>
+            <div class='incorrectanswer'>
+                <p></p>
+            </div>
+        </li>
+    </ol>
+    <ol conversationid='2' canrepeat='true'>
+        <li>
+            <div class='speech'>
+                <p></p>
+            </div>
+        </li>
+    </ol>
+</div>
+</div>

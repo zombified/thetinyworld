@@ -1,0 +1,80 @@
+<!-- this is an example node, with all possible options visible at least once (though, maybe not in a logical manner) //-->
+<div class='node'>
+<dl class='settings'>
+    <dt>disableddirection</dt><dd>n</dd>
+    <dt>disableddirection</dt><dd>e</dd>
+</dl>
+<div class='from'>
+    <div class='north'>
+        <p>
+            You step out of the old stony tower into fresh air (with a hint of manure on the wind). It's bright compared to the tower, so you shade your eyes until they adjust.
+        </p>
+    </div>
+    <div class='east'></div>
+    <div class='south'>
+        <p>
+            Following the path between the chasm and river was long and pieceful, and you've finally arrived at the magus tower. You stand now in the yard outside the old stony tower, which is surrounded by a white picket fence.
+        </p>
+    </div>
+    <div class='west'>
+        <p>
+            Following the path between the cliff and chasm, your journey was stressful. More than once you almost fell to your death. You stand now in the yard outside the old stony tower, which is surrounded by a white picket fence.
+        </p>
+    </div>
+</div>
+<div class='look'>
+    <div class='north'>
+        <p>
+            A <span class='talk' conversationid='1'>wooden door</span> sits recessed into the tower wall.
+        </p>
+    </div>
+    <div class='east'>
+        <p>
+            A grassy yard with a white picket fence at it's edge. The grass seems well tended. In the north-east corner you see a old shed with a window protruding from it's roof. Next to the shed is a <span class='talk' conversationid='2'>water pump</span><span class='itemdesc'>. with a <span class='item' itemid='nd5-bucket'>bucket</span> tipped over under it.</span>
+        </p>
+    </div>
+    <div class='south'>
+        <p>
+            The path between chasm and river winds it's way towards the large stone dias you arrived on.
+        </p>
+    </div>
+    <div class='west'>
+        <p>
+            The path between cliff edge and chasm makes it's way towards the large stone dias you arrived on. Inside the white picket fence you see a sheep, pig, and cow wondering around. Occasionally the sheep will bleat, but otherwise they all seem pretty docile.
+        </p>
+    </div>
+</div>
+<div class='move'>
+    <div class='north'>/node6.html</div>
+    <div class='east'></div>
+    <div class='south'>/node2.html</div>
+    <div class='west'>/node2.html</div>
+</div>
+<div class='movefailed'>
+    <div class='north'>It's not polite to enter a dwelling without being invited, perhaps you should knock?</div>
+    <div class='east'>The shed seems locked, and there's no reason to jump the fence.</div>
+    <div class='south'></div>
+    <div class='west'></div>
+</div>
+<div class='conversations'>
+    <ol conversationid='1' canrepeat='false' gotoifrepeated='-1'>
+        <li>
+            <div class='speech'>
+                <p>"Eh?" you hear a screach voice from inside the door. "You must be the new apprentice. Go fetch a water bucket."</p>
+            </div>
+        </li>
+        <li stopconv='nd5-water-bucket/playerHas'><div class='speech'><p>"Get the water bucket!" you hear from inside.</p></div></li>
+        <li actioncmd='n/acommand'></li>
+    </ol>
+    <ol conversationid='2' canrepeat='false' gotoifrepeated='-1'>
+        <li><div class='speech'>The pump is plain and unadorned -- just a pipe, handle, and spout.</div></li>
+        <li stopconv='nd5-bucket/playerHasNoRemove'><div class='speech'></div></li>
+        <li>
+            <div class='speech'>
+                <p>You pump some water into the bucket you carry</p>
+            </div>
+        </li>
+        <li actioncmd='nd5-bucket/agiveWaterBucket'><div class='speech'></div></li>
+    </ol>
+</div>
+</div>

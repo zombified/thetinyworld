@@ -272,6 +272,9 @@
         var cmd, funcs, stopexec;
         if(answered) {pos += 1;}
         for(var i = pos; i < convEls.length; i++) {
+            speech = $(convEls[i]).find('.speech');
+            addText($(speech).html());
+
             stopconv = $(convEls[i]).attr('stopconv');
             if(typeof stopconv !== 'undefined' && stopconv !== false) {
                 stopcmdFieldVal = stopconv.split('/');
@@ -283,7 +286,9 @@
                         if(!window[funcs[j]](cmd)) { stopexec = true; }
                     }
                 }
-                if(stopexec) { return; }
+                if(stopexec) {
+                    return;
+                }
             }
 
             actioncmd = $(convEls[i]).attr('actioncmd');
@@ -299,8 +304,7 @@
                     if(stopexec) { return; }
                 }
             }
-            speech = $(convEls[i]).find('.speech');
-            addText($(speech).html());
+
             if($(speech).find('.answer').length > 0) {
                 break;
             }
@@ -490,6 +494,7 @@
             case 'lw':
                 look(command[0].substr(1,1));
                 break;
+            case 'l':
             case 'look':
                 switch(command[1]){
                     case 'n':
@@ -507,6 +512,7 @@
                         // be examined, which is like talking to it
                         talk(command.slice(1).join(' '));
                 }
+                break;
 
             // --- talk/answer ----------
             case 't':
@@ -625,14 +631,29 @@
 
     function acommand(value) { dispatchCommand(value, true); return true; }
 
-    function playerHas(item) {
+    function agiveWaterBucket(bucket) {
+        addMessage(settings.inventory[bucket] + " was removed from your inventory");
+        delete settings.inventory[bucket]
+        settings.inventory['nd5-water-bucket'] = 'water bucket';
+        addMessage(settings.inventory['nd5-water-bucket'] + " was added to your inventory");
+        return false;
+    }
+
+    function playerHas(item, remove) {
+        remove = typeof remove !== 'undefined' ? remove : true;
+
         if(item in settings.inventory) {
-            addMessage(settings.inventory[item] + " was used, and removed from your inventory");
-            delete settings.inventory[item];
+            if(remove) {
+                addMessage(settings.inventory[item] + " was used, and removed from your inventory");
+                delete settings.inventory[item];
+            }
             return true;
         }
 
         return false;
+    }
+    function playerHasNoRemove(item) {
+        return playerHas(item, false);
     }
 
 
