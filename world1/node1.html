@@ -39,7 +39,7 @@
     <div class='west'>There are tall deciduous trees to the west.</div>
 </div>
 <div class='move'>
-    <div class='north'></div>
+    <div class='north'>/node2.html</div>
     <div class='east'></div>
     <div class='south'></div>
     <div class='west'></div>
@@ -54,22 +54,33 @@
     <ol conversationid='1' canrepeat='false' gotoifrepeated='2'>
         <li>
             <div class='speech'>
-                <p>"Hello, hello -- you'll forgive an old man won't you? I need to ask you some questions before we can continue.</p>
+                <p>"Hello, hello -- you'll forgive an old man won't you? I need to ask you a question or two that may seem perfectly obvious to you, but I must ask them just the same.</p>
             </div>
         </li>
         <li>
             <div class='speech'>
-                Let's start with your gender, do identify yourself as <span class='answer' field='gender'>male</span> or <span class='answer' field='gender'>female</span>?"</p>
+                What gender do identify yourself as <span class='answer' field='gender'>male</span>, <span class='answer' field='gender'>female</span>, or, perhaps, <span class='answer' field='gender'>androgynous</span>?"</p>
             </div>
             <div class='incorrectanswer'>
-                <p>"Please, just answer the question. What gender do you identify yourself as, <span class='answer' field='gender'>male</span> or <span class='answer' field='gender'>female</span>?"</p>
+                <p>"Please, just answer the question. We can get you moving much quicker this way! What gender do you identify yourself as, <span class='answer' field='gender'>male</span>, <span class='answer' field='gender'>female</span>, or, perhaps, <span class='answer' field='gender'>androgynous</span>?"</p>
             </div>
         </li>
         <li>
             <div class='speech'>
-                <p>"Fantastic!" he says, "A <span replace='gender/quicktest' />! You should make lots of friends!" as he scribbles something unintelligble down in the book.</p>
+                <p>"Fantastic!" he says, "A <span replace='gender/tgenderObj/tupper' />! You should make lots of friends!" as he scribbles something unintelligble down in the book.</p>
             </div>
         </li>
+        <li>
+            <div class='speech'>
+                <p>
+                    "Now, what is your-" the man's eyes glaze over momentarily, interrupting whatever he was about to say. "I'm sorry, looks like I'm going to have to cut this part short -- the high magus has give instruction to see you off to the master magus you will be studying under."
+                </p>
+                <p>
+                    The man sets down his quill, and picks up a round shiny object. "Now, <span replace='gender/tgenderChild' />, I'm sure you have a lot of questions. Usually we get to introductions after I ask your name, but there's no time for that now." You hear him mutter something under his breath, and see him wave his right hand over the object in his left hand.
+                </p>
+            </div>
+        </li>
+        <li actioncmd='n/acommand'></li>
     </ol>
     <ol conversationid='2' canrepeat='true'>
         <li>

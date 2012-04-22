@@ -120,15 +120,18 @@
 
     function replaceAnswers() {
         var replacements = $('#curnode [replace]');
-        var replaceFieldVal, replaceVal, setting, func;
+        var replaceFieldVal, replaceVal, setting, funcs;
         for(var i = 0; i < replacements.length; i++) {
             replaceFieldVal = $(replacements[i]).attr('replace').split('/');
             setting = replaceFieldVal[0];
-            func = replaceFieldVal.length > 1 ? replaceFieldVal[1] : -1;
+            funcs = replaceFieldVal.splice(1);
 
             if(setting in settings.answers) {
-                if(func !== -1) {
-                    replaceVal = window[func](settings.answers[setting]);
+                if(funcs.length > 0) {
+                    replaceVal = settings.answers[setting];
+                    for(var j = 0; j < funcs.length; j++) {
+                        replaceVal = window[funcs[j]](replaceVal);
+                    }
                 }
                 else {
                     replaceVal = settings.answers[setting];
@@ -162,25 +165,27 @@
         })
     }
 
-    function move(direction) {
-        var canmove = true;
-        if('disableddirection' in settings.curnode) {
-            for(var i = 0; i < settings.curnode.disableddirection.length; i++) {
-                if(settings.curnode.disableddirection[i] == direction) {
-                    canmove = false;
-                    break;
+    function move(direction, force) {
+        if(!force) {
+            var canmove = true;
+            if('disableddirection' in settings.curnode) {
+                for(var i = 0; i < settings.curnode.disableddirection.length; i++) {
+                    if(settings.curnode.disableddirection[i] == direction) {
+                        canmove = false;
+                        break;
+                    }
                 }
             }
-        }
-        if(!canmove) {
-            var msg = $('#curnode .movefailed .' + diraliases[direction]).html();
-            if(msg == '') {
-                addMessage('Unfortunately, you are unable move in that direction');
+            if(!canmove) {
+                var msg = $('#curnode .movefailed .' + diraliases[direction]).html();
+                if(msg == '') {
+                    addMessage('Unfortunately, you are unable move in that direction');
+                }
+                else {
+                    addMessage(msg);
+                }
+                return;
             }
-            else {
-                addMessage(msg);
-            }
-            return;
         }
 
         var moveto = $('#curnode .move .' + diraliases[direction]).html();
@@ -230,8 +235,22 @@
         // print out conversation elements until there's a required answer element found
         // starting at the current element
         var speech;
+        var actioncmd;
         if(answered) {pos += 1;}
         for(var i = pos; i < convEls.length; i++) {
+            actioncmd = $(convEls[i]).attr('actioncmd');
+            if(typeof actioncmd !== 'undefined' && actioncmd !== false) {
+                var actioncmdFieldVal = actioncmd.split('/');
+                var cmd = actioncmdFieldVal[0];
+                var funcs = actioncmdFieldVal.splice(1);
+                var stopexec = false;
+                if(funcs.length >= 0) {
+                    for(var j = 0; j < funcs.length; j++) {
+                        if(window[funcs[j]](cmd)) { stopexec = true; }
+                    }
+                    if(stopexec) { return; }
+                }
+            }
             speech = $(convEls[i]).find('.speech');
             addText($(speech).html());
             if($(speech).find('.answer').length > 0) {
@@ -286,8 +305,10 @@
         conversation(settings.lastconversationid, true);
     }
 
-    function dispatchCommand() {
-        var rawcommand = $('#in').html();
+    function dispatchCommand(rawcommand, force) {
+        rawcommand = rawcommand || $('#in').html();
+        force = typeof force !== 'undefined' ? force : false;
+
         settings.commandhistory.push(rawcommand);
         var command = rawcommand.toLowerCase().split(' ');
         $('#in').html('');
@@ -311,7 +332,7 @@
             case 'south':
             case 'w':
             case 'west':
-                move(command[0].substr(0,1));
+                move(command[0].substr(0,1), force);
                 break;
 
             // --- look ----------
@@ -380,12 +401,62 @@
         }
     }
 
+
+    function tupper(value) { return value.toUpperCase(); }
+    function tlower(value) { return value.toLowerCase(); }
+    function tcap(value) { return value.substr(0,1).toUpperCase() + value.substr(1).toLowerCase(); }
+
+    function tgenderSub(value) {
+        switch(value.toLowerCase()){
+            case 'male': return 'he';
+            case 'female': return 'she';
+            case 'androgynous': return 'it';
+        }
+    }
+    function tgenderObj(value) {
+        switch(value.toLowerCase()){
+            case 'male': return 'him';
+            case 'female': return 'her';
+            case 'androgynous': return 'it';
+        }
+    }
+    function tgenderPos(value) {
+        switch(value.toLowerCase()){
+            case 'male': return 'his';
+            case 'female': return 'her';
+            case 'androgynous': return 'its';
+        }
+    }
+    function tgenderRef(value) {
+        switch(value.toLowerCase()){
+            case 'male': return 'himself';
+            case 'female': return 'herself';
+            case 'androgynous': return 'itself';
+        }
+    }
+
+    function tgenderPluralSub(value) { return 'they'; }
+    function tgenderPluralObj(value) { return 'them'; }
+    function tgenderPluralPos(value) { return 'their'; }
+    function tgenderPluralRef(value) { return 'themselves'; }
+
+    function tgenderChild(value) {
+        switch(value.toLowerCase()){
+            case 'male': return 'boy';
+            case 'female': return 'girl';
+            case 'androgynous': return 'child';
+        }
+    }
+
+    function acommand(value) { dispatchCommand(value, true); return true; }
+
+
     $(document).ready(function(){
         // initialize command input
         $('#in').keydown(handleKeyboard);
 
         // get start node for the world
-        $.get(settings.basepath+'/start/start.html', setCurNode);
+        $.get(settings.basepath+'/start.html', setCurNode);
 
         $('#in').focus();
     });
