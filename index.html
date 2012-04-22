@@ -641,6 +641,12 @@
         return false;
     }
 
+    function agiveNormalSphere(junk) {
+        settings.inventory['nd12-normal-sphere'] = '"normal" sphere';
+        addMessage(settings.inventory['nd12-normal-sphere'] + " was added to your inventory");
+        return false;
+    }
+
     function playerHas(item, remove) {
         remove = typeof remove !== 'undefined' ? remove : true;
 

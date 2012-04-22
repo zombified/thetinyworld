@@ -1,27 +1,45 @@
 <!-- this is an example node, with all possible options visible at least once (though, maybe not in a logical manner) //-->
 <div class='node'>
 <dl class='settings'>
+    <dt>disableddirection</dt><dd>n</dd>
     <dt>disableddirection</dt><dd>e</dd>
+    <dt>disableddirection</dt><dd>s</dd>
     <dt>disableddirection</dt><dd>w</dd>
 </dl>
 <div class='from'>
-    <div class='north'></div>
-    <div class='east'></div>
-    <div class='south'>
-        <p></p>
+    <div class='north'>
+        <p>
+            You clamber up the rope, and hoist yourself onto the edge of the window. You double check to make sure your harness is secured, and then you jump!
+        </p>
+        <p>
+            You sail smoothly into the east window on the second story of the tower. Your landing was a little messy, but survivable! You happen to land facing the armoir on the north wall, next to the stairs.
+        </p>
     </div>
+    <div class='east'></div>
+    <div class='south'></div>
     <div class='west'></div>
 </div>
 <div class='look'>
     <div class='north'>
         <p>
-            <span class='talk' conversationid='1'></span>
+            You see the other <span class='talk' conversationid='1'>sphere</span> resting against the wall under the armoir.
         </p>
-        <p class='itemdesc'><span class='item' conversationid='2' itemid='nd1-quill'></span></p>
     </div>
-    <div class='east'></div>
-    <div class='south'></div>
-    <div class='west'></div>
+    <div class='east'>
+        <p>
+            A pile of dirty clothes and the <span class='talk' conversationid='2'>chamber pot</span> sit on the floor.
+        </p>
+    </div>
+    <div class='south'>
+        <p>
+            The small writing desk and chair sit in the same positions, with the sphere marked with "tiny" on it resting against a chair leg.
+        </p>
+    </div>
+    <div class='west'>
+        <p>
+            The master magus' bed, and your mat are up against the wall.
+        </p>
+    </div>
 </div>
 <div class='move'>
     <div class='north'></div>
@@ -30,26 +48,51 @@
     <div class='west'></div>
 </div>
 <div class='movefailed'>
-    <div class='north'></div>
-    <div class='east'></div>
-    <div class='south'></div>
-    <div class='west'></div>
+    <div class='north'>No point in going over there.</div>
+    <div class='east'>No point in going over there.</div>
+    <div class='south'>No point in going over there.</div>
+    <div class='west'>No point in going over there.</div>
 </div>
 <div class='conversations'>
-    <ol conversationid='1' canrepeat='false' gotoifrepeated='2'>
-        <li actioncmd='n/acommand' stopconv='drawing/playerHas'>
+    <ol conversationid='1' canrepeat='false' gotoifrepeated='-1'>
+        <li>
             <div class='speech'>
-                <p><span class='answer' field='gender'>male</span><span replace='gender/tupper/tgenderSub' /></p>
+                <p>
+                    As you approach the sphere, you notice this one says 'normal' on it. You close your eyes and touch it, and say "Normal, please make me Normal".
+                </p>
             </div>
-            <div class='incorrectanswer'>
-                <p></p>
+        </li>
+        <li actioncmd='junk/agiveNormalSphere'><div class='speech'></div></li>
+        <li>
+            <div class='speech'>
+                The familiar feel of being squished does not come -- instead you feel as if you are going to burst apart from the inside! Slowly you open your eyes, and you're back to normal, standing in the middle of the master magus' bedroom.
             </div>
         </li>
     </ol>
-    <ol conversationid='2' canrepeat='true'>
+    <ol conversationid='2' canrepeat='false' gotoifrepeated='-1'>
         <li>
             <div class='speech'>
-                <p></p>
+                <p>
+                    Just as soon as you are done appreciating your restored size, you remember that the master magus told you not to forget to empty his chamber pot!
+                </p>
+                <p>
+                    As you finishing dumping the pot, and disposing of the grotesque slop pot in the kitchen, you hear the magus coming up the river path.
+                </p>
+                <p>
+                    He barges in with whiskey bottle in hand. He stops suddenly when he see's you, and stairs you down. After a moment he says "you clean the chamber pot?".
+                </p>
+                <p>
+                    "Yup."
+                </p>
+                <p>
+                    "Hehe, good <span replace='gender/tgenderChild' />, very good. I think it's about time to fill it up again!" Cackling, the master magus rushes off to his bedroom.
+                </p>
+                <p>
+                    It's going to be a long, long apprenticeship.
+                </p>
+                <p>
+                    <em><strong>THE END.</strong></em>
+                </p>
             </div>
         </li>
     </ol>
