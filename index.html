@@ -56,6 +56,12 @@
     <div id='curnode' class='hidden'></div>
 </body>
 <script type='text/javascript'>
+    // http://stackoverflow.com/questions/4673461/jquery-selector-match-content-of-elements
+    $.expr[':'].contentIs = function(el, idx, meta) {
+        return $(el).text().toLowerCase() === meta[3].toLowerCase();
+    }
+
+
     var path = window.location.protocol + '//' + window.location.host + window.location.pathname.slice(0, window.location.pathname.lastIndexOf('/'));
     var settings = {};
 
@@ -67,6 +73,7 @@
     settings.lastconversationid = -1;
     settings.commandhistory = [];
     settings.commandhistorypos = -1;
+    settings.answers = {};
 
     var diraliases = {
         'n':'north',
@@ -101,6 +108,7 @@
 
     function setCurNode(nodedata) {
         $('#curnode').html(nodedata);
+        replaceAnswers();
         settings.curnode = parseSettings('#curnode');
 
         var movetoFacing = $('#curnode .look .' + diraliases[settings.facing]).html();
@@ -110,6 +118,26 @@
         addText(movetoFacing);
     }
 
+    function replaceAnswers() {
+        var replacements = $('#curnode [replace]');
+        var replaceFieldVal, replaceVal, setting, func;
+        for(var i = 0; i < replacements.length; i++) {
+            replaceFieldVal = $(replacements[i]).attr('replace').split('/');
+            setting = replaceFieldVal[0];
+            func = replaceFieldVal.length > 1 ? replaceFieldVal[1] : -1;
+
+            if(setting in settings.answers) {
+                if(func !== -1) {
+                    replaceVal = window[func](settings.answers[setting]);
+                }
+                else {
+                    replaceVal = settings.answers[setting];
+                }
+
+                $(replacements[i]).html(replaceVal);
+            }
+        }
+    }
 
     function addMessage(msg) {
         if(msg==''){return;}
@@ -211,6 +239,7 @@
             }
             pos += 1;
         }
+
         settings.conversations[settings.curnodelocation][id] = pos;
         settings.lastconversationid = id;
     }
@@ -239,13 +268,21 @@
         }
 
         var selector = '#curnode .conversations ol[conversationid*="'+settings.lastconversationid+'"]';
-        var answers = $(selector + ' .speech .answer:contains("'+option+'")');
+        var answers = $(selector + ' .speech .answer:contentIs("'+option+'")');
+        var incorrectanswer = $(selector + ' .incorrectanswer').html();
         if(answers.length <= 0) {
-            var incorrectanswer = $(selector + ' .incorrectanswer').html();
             addText(incorrectanswer);
             return;
         }
 
+        if(answers.length > 1) {
+            addMessage("Your answer seems to be ambiguous.");
+            return;
+        }
+
+        var settingtoset = $(answers[0]).attr('field');
+        settings.answers[settingtoset] = option;
+        replaceAnswers();
         conversation(settings.lastconversationid, true);
     }
 
