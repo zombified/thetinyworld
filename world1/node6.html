@@ -9,50 +9,48 @@
     <div class='north'></div>
     <div class='east'></div>
     <div class='south'>
-        <p></p>
+        <p>
+            You enter a dimly lit, somewhat rank smelling kitchen area. You see an scrawny middle aged fellow bouncing around from the table, to the ice-box, to the slop-bucket, and everywhere in between.
+        </p>
+        <p>
+            When he notices you he says, "Hello! Welcome to the High Tower -- we'll have to save the chit chat for later, I'm late for a very important date! Anyway, while I'm gone I want you to clean the second floor. Oh, and don't you be forgetting the chamber pot!". With that, he flies out the door, grabbing the water bucket on the way.
+        </p>
     </div>
     <div class='west'></div>
 </div>
 <div class='look'>
     <div class='north'>
         <p>
-            <span class='talk' conversationid='1'></span>
+            You see stairs leading up into the tower towards the back of the room. Where the stairs form a wall, a small grimy table sits with one stool next to it. They both look well worn, and rarely washed.
         </p>
-        <p class='itemdesc'><span class='item' conversationid='2' itemid='nd1-quill'></span></p>
     </div>
-    <div class='east'></div>
-    <div class='south'></div>
-    <div class='west'></div>
+    <div class='east'>
+        <p>
+            A wash basin with all manner of dirty dishes, and even a couple of clothes takes up part of that wall. There appears to be a rat nosing around that area as well. The other part of the wall is taken up by cubboards and a remarkably clean and nice looking counter top, obviously used for food preparation.
+        </p>
+    </div>
+    <div class='south'>
+        <p>
+            Just the door you came through, along with a couple of empty coat hooks, and a pair of old, worn out, and very muddy boots.
+        </p>
+    </div>
+    <div class='west'>
+        <p>
+            This wall really doesn't contain much of anything, except for a slop bucket, which, you think, might have been used for a chamber pot at some point to. The smell of it alone makes you want to run back to the river just to get clean.
+        </p>
+    </div>
 </div>
 <div class='move'>
-    <div class='north'></div>
+    <div class='north'>/node7.html</div>
     <div class='east'></div>
     <div class='south'></div>
     <div class='west'></div>
 </div>
 <div class='movefailed'>
     <div class='north'></div>
-    <div class='east'></div>
-    <div class='south'></div>
-    <div class='west'></div>
+    <div class='east'>There's no where to go, except for into the food preparation area and wash basin, and you don't like the looks of the rat nosing about some of the dirty dishes in the wash basin.</div>
+    <div class='south'>You'd best not anger the master magus by leaving. You've heard they have ways of finding you that might be unpleasant.</div>
+    <div class='west'>The smell of the slop bucket alone makes you want to stay away from that wall.</div>
 </div>
-<div class='conversations'>
-    <ol conversationid='1' canrepeat='false' gotoifrepeated='2'>
-        <li actioncmd='n/acommand' stopconv='drawing/playerHas'>
-            <div class='speech'>
-                <p><span class='answer' field='gender'>male</span><span replace='gender/tupper/tgenderSub' /></p>
-            </div>
-            <div class='incorrectanswer'>
-                <p></p>
-            </div>
-        </li>
-    </ol>
-    <ol conversationid='2' canrepeat='true'>
-        <li>
-            <div class='speech'>
-                <p></p>
-            </div>
-        </li>
-    </ol>
-</div>
+<div class='conversations'></div>
 </div>
