@@ -1,55 +1,83 @@
 <!-- this is an example node, with all possible options visible at least once (though, maybe not in a logical manner) //-->
 <div class='node'>
 <dl class='settings'>
-    <dt>disableddirection</dt><dd>e</dd>
+    <dt>disableddirection</dt><dd>n</dd>
     <dt>disableddirection</dt><dd>w</dd>
+    <dt>disableddirection</dt><dd>s</dd>
 </dl>
 <div class='from'>
     <div class='north'></div>
     <div class='east'></div>
-    <div class='south'>
-        <p></p>
+    <div class='south'></div>
+    <div class='west'>
+        <p>
+            As you start picking the clothes pile apart, two small balls roll from a pants pocket, and go rolling all over the floor. One ends up somewhere under the armoir, the other rolls to the chair.
+        </p>
+        <p>
+            You walk over and pickup the one by the chair. It's quite heavy to the touch, and looks like that device the old man in the meadow had. Its surface is smooth, but there's an inscription: "tiny".
+        </p>
+        <p>
+            "Tiny?", you say out loud, and suddenly that feeling of being compressed is back, and you are blacking out...
+        </p>
+        <p>
+            When you come to, it takes a moment to orient yourself. Everything around you that was once the size of a chair now looms in the distance the size of a mountain. The ball that once fit in the palm of your hand rests next to a chair leg, the size of a horse.
+        </p>
+        <p>
+            "Help!" you yell, but there is no answer. "HEEEEEEEEEEEELLLLLLLLLPPPPPPP!" you scream. You are in way over your head.
+        </p>
+        <p>
+            Suddenly a sound answers you, "meorw?". The cat's head perks up over the edge of the bed. As soon as it sees you, it pounces. You try to dive to the side to avoid it, but it just adjusts it's trajectory, and swats you with a gigantic paw.
+        </p>
+        <p>
+            You are sent flying out the east window, and you black out once again.
+        </p>
+        <p>
+            You wake up a little dazed, and sore all over your body. You don't know how your not dead.
+        </p>
+        <p>
+            As you stand, you notice you are surrounded by what you guess to be normally tall grass, but gigantic by measure now.
+        </p>
     </div>
-    <div class='west'></div>
 </div>
 <div class='look'>
     <div class='north'>
         <p>
-            <span class='talk' conversationid='1'></span>
-        </p>
-        <p class='itemdesc'><span class='item' conversationid='2' itemid='nd1-quill'></span></p>
+            A wall of enormous, impenetratable grass sits in front of you.
+        <p>
     </div>
-    <div class='east'></div>
-    <div class='south'></div>
-    <div class='west'></div>
+    <div class='east'>
+        <p>
+            Through a <span class='talk' conversationid='1'>hole</span> the blades of grass in front of you, you can just barely make out what you think is a hole in the side of what you think might be the shed.
+        </p>
+    </div>
+    <div class='south'>
+        <p>
+            A wall of enormous, impenetratable grass sits in front of you.
+        <p>
+    </div>
+    <div class='west'>
+        <p>
+            A wall of enormous, impenetratable grass sits in front of you.
+        <p>
+    </div>
 </div>
 <div class='move'>
     <div class='north'></div>
-    <div class='east'></div>
+    <div class='east'>/node11.html</div>
     <div class='south'></div>
     <div class='west'></div>
 </div>
 <div class='movefailed'>
-    <div class='north'></div>
+    <div class='north'>A, literally, gigantic wall of grass blocks your way.</div>
     <div class='east'></div>
-    <div class='south'></div>
-    <div class='west'></div>
+    <div class='south'>A, literally, gigantic wall of grass blocks your way.</div>
+    <div class='west'>A, literally, gigantic wall of grass blocks your way.</div>
 </div>
 <div class='conversations'>
-    <ol conversationid='1' canrepeat='false' gotoifrepeated='2'>
-        <li actioncmd='n/acommand' stopconv='drawing/playerHas'>
-            <div class='speech'>
-                <p><span class='answer' field='gender'>male</span><span replace='gender/tupper/tgenderSub' /></p>
-            </div>
-            <div class='incorrectanswer'>
-                <p></p>
-            </div>
-        </li>
-    </ol>
-    <ol conversationid='2' canrepeat='true'>
+    <ol conversationid='1' canrepeat='true'>
         <li>
             <div class='speech'>
-                <p></p>
+                The hole in the grassy barricade seems just big enough for you to slip through.
             </div>
         </li>
     </ol>

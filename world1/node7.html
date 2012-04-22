@@ -1,57 +1,59 @@
 <!-- this is an example node, with all possible options visible at least once (though, maybe not in a logical manner) //-->
 <div class='node'>
 <dl class='settings'>
+    <dt>disableddirection</dt><dd>n</dd>
     <dt>disableddirection</dt><dd>e</dd>
+    <dt>disableddirection</dt><dd>s</dd>
     <dt>disableddirection</dt><dd>w</dd>
 </dl>
 <div class='from'>
     <div class='north'></div>
     <div class='east'></div>
     <div class='south'>
-        <p></p>
+        <p>
+            Ascending the stairs to the second level, the smell from the kitchen diminishes somewhat. The stairs continue up. The windows in this room are small, but there seems to be a good cross-wind getting some fresh air in. There is very little in this room except for a small bed, a floor mat, presumably where you'll be sleeping, a pile of dirty cloths, an old armoir and a simple writing desk.
+        </p>
     </div>
     <div class='west'></div>
 </div>
 <div class='look'>
     <div class='north'>
         <p>
-            <span class='talk' conversationid='1'></span>
+            There are stairs leading up, and down. The way up is blocked by a locked door, and you really don't want to go back down to the kitchen where that slop bucket is. On the wall next to the stairs stands a tall solid armoir. You idly wonder if it was built outside the tower and brough up, or if it was built in this room.
         </p>
-        <p class='itemdesc'><span class='item' conversationid='2' itemid='nd1-quill'></span></p>
     </div>
-    <div class='east'></div>
-    <div class='south'></div>
-    <div class='west'></div>
+    <div class='east'>
+        A window sit's squarely in the middle of this wall. Directly below is a <span class='talk' conversationid='1'>mound of clothes</span>, and next to them is the chamber pot, which reeks of old piss.
+    </div>
+    <div class='south'>
+        <p>
+            A bird sits chirping on a window sill, under which a simple writing table sits with a high-backed chair. There isn't anything of note on the table, just some old quills and blank sheets of paper.
+        </p>
+    </div>
+    <div class='west'>
+        <p>
+            There is a small straw bed shoved against the wall, raised off the floor by several flat top chests. A window let's in a bright ray of sun which hit's a pillow, half falling off the bed. On the pillow is a small short haired black cat, soaking up the sun.
+        </p>
+        <p>
+            At the foot of the bed you see a small thickly woven mat that you assume will be your bed for the foreseeable future.
+        </p>
+    </div>
 </div>
 <div class='move'>
     <div class='north'></div>
-    <div class='east'></div>
+    <div class='east'>/node10.html</div>
     <div class='south'></div>
     <div class='west'></div>
 </div>
 <div class='movefailed'>
-    <div class='north'></div>
-    <div class='east'></div>
-    <div class='south'></div>
-    <div class='west'></div>
+    <div class='north'>The door to the next level up is locked, and you don't want to go near the kitchen yet.</div>
+    <div class='east'>Better not jump out the window, not yet at least.</div>
+    <div class='south'>While tempting, jumping out the window isn't something you want to do right now.</div>
+    <div class='west'>The tower may be disgusting, but jumping out a window won't fix that.</div>
 </div>
 <div class='conversations'>
-    <ol conversationid='1' canrepeat='false' gotoifrepeated='2'>
-        <li actioncmd='n/acommand' stopconv='drawing/playerHas'>
-            <div class='speech'>
-                <p><span class='answer' field='gender'>male</span><span replace='gender/tupper/tgenderSub' /></p>
-            </div>
-            <div class='incorrectanswer'>
-                <p></p>
-            </div>
-        </li>
-    </ol>
-    <ol conversationid='2' canrepeat='true'>
-        <li>
-            <div class='speech'>
-                <p></p>
-            </div>
-        </li>
+    <ol conversationid='1' canrepeat='false' gotoifrepeated='-1'>
+        <li actioncmd='e/acommand'><div class='speech'></div></li>
     </ol>
 </div>
 </div>
