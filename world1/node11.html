@@ -1,57 +1,63 @@
 <!-- this is an example node, with all possible options visible at least once (though, maybe not in a logical manner) //-->
 <div class='node'>
 <dl class='settings'>
+    <dt>disableddirection</dt><dd>n</dd>
     <dt>disableddirection</dt><dd>e</dd>
+    <dt>disableddirection</dt><dd>s</dd>
     <dt>disableddirection</dt><dd>w</dd>
 </dl>
 <div class='from'>
     <div class='north'></div>
     <div class='east'></div>
-    <div class='south'>
-        <p></p>
+    <div class='south'></div>
+    <div class='west'>
+        <p>The shed has deep shadows, but is well lit by the window protruding from it's roof.</p>
     </div>
-    <div class='west'></div>
 </div>
 <div class='look'>
     <div class='north'>
         <p>
-            <span class='talk' conversationid='1'></span>
+            You see a work bench with some, what would normally be, extremely fine <span class='item' itemid='nd11-wire'>wire</span>.
         </p>
-        <p class='itemdesc'><span class='item' conversationid='2' itemid='nd1-quill'></span></p>
     </div>
-    <div class='east'></div>
-    <div class='south'></div>
-    <div class='west'></div>
+    <div class='east'>
+        <p>
+            A bookshelf sits on this wall<span class='itemdescr'>, with some sheets of <span class='item' itemid='nd11-paper'>scrap paper</span> on the bottom shelf</span>.
+        </p>
+    </div>
+    <div class='south'>
+        <p>
+            The window is on the roof of this wall, it prodtrudes horizontally out of the building. You think you might be able to <span class='talk' conversationid='1'>climb up a rope</span> that's hung on the wall right below the window sill.
+        </p>
+    </div>
+    <div class='west'>
+        <p>
+            There's a giant door on this wall<span class='itemdescr'>, and on the floor next to the door seems to be a small basket of sewing supplies, including a <span class='item' itemid='nd11-needle-and-thread'>needle and thread</span></span>.
+        </p>
+    </div>
 </div>
 <div class='move'>
     <div class='north'></div>
     <div class='east'></div>
-    <div class='south'></div>
+    <div class='south'>/node12.html</div>
     <div class='west'></div>
 </div>
 <div class='movefailed'>
-    <div class='north'></div>
-    <div class='east'></div>
-    <div class='south'></div>
-    <div class='west'></div>
+    <div class='north'>No where to go to over there.</div>
+    <div class='east'>Can't go anywhere over there.</div>
+    <div class='south'>You could climb out the window, but you think another fall would kill be your death.</div>
+    <div class='west'>The door is a little large for you to operate, and there's no point going back out to the grassy jungle.</div>
 </div>
 <div class='conversations'>
-    <ol conversationid='1' canrepeat='false' gotoifrepeated='2'>
-        <li actioncmd='n/acommand' stopconv='drawing/playerHas'>
+    <ol conversationid='1' canrepeat='true'>
+        <li stopconv='glider/playerHas'>
             <div class='speech'>
-                <p><span class='answer' field='gender'>male</span><span replace='gender/tupper/tgenderSub' /></p>
-            </div>
-            <div class='incorrectanswer'>
-                <p></p>
+                <p>
+                    A glider would work well here -- you could fly over to the second floor window of the tower.
+                </p>
             </div>
         </li>
-    </ol>
-    <ol conversationid='2' canrepeat='true'>
-        <li>
-            <div class='speech'>
-                <p></p>
-            </div>
-        </li>
+        <li actioncmd='s/acommand'></li>
     </ol>
 </div>
 </div>
